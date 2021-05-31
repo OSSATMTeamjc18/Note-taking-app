@@ -8,23 +8,23 @@ const PORT = process.env.PORT || 3003;
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-app.use(express.static("public"));
+app.use(express.static("Develop"));
 
 
 app.get("/notes", (request, response) => {
 
-    response.sendFile(path.join(__dirname, "public", "notes.html"));
+    response.sendFile(path.join(__dirname,"Develop", "public", "assets", "notes.html"));
     console.log("Your Notes file!");
 })
 
 app.get("/", (request, response) => {
-    response.sendFile(path.join(__dirname, "public", "index.html"));
+    response.sendFile(path.join(__dirname, "Develop", "public", "assets", "index.html"));
     console.log("Your index file!");
 })
 
 app.get("/api/notes", (request, response) => {
 
-    fs.readFile(path.join(__dirname, "db", "db.json"), 'utf8', (err, jsonString) => {
+    fs.readFile(path.join(__dirname, "Develop", "db", "db.json"), 'utf8', (err, jsonString) => {
         if (err) {
             console.log("File read failed:", err)
             return
@@ -37,7 +37,7 @@ app.get("/api/notes", (request, response) => {
 
 app.post("/api/notes", function (request, response) {
 
-    fs.readFile(path.join(__dirname, "db", "db.json"), 'utf8', (err, jsonString) => {
+    fs.readFile(path.join(__dirname, "Devleop", "db", "db.json"), 'utf8', (err, jsonString) => {
         if (err) {
             console.log("File read failed:", err)
             return
@@ -54,11 +54,42 @@ app.post("/api/notes", function (request, response) {
         notes.push(newNote);
         let NotesJSON = JSON.stringify(notes);
 
-        fs.writeFile(path.join(__dirname, "db", "db.json"), NotesJSON, (err) => {
+        fs.writeFile(path.join(__dirname, "Develop", "db", "db.json"), NotesJSON, (err) => {
             if (err) {
                 return console.log(err);
             }
             console.log("You are sucessful!", NotesJSON);
+            return NotesJSON;
+        });
+
+    })
+
+});
+
+app.delete('/api/notes/:id', function (request, response) {
+
+    fs.readFile(path.join(__dirname, "Develop", "db", "db.json"), 'utf8', (err, jsonString) => {
+        if (err) {
+            console.log("File read failed:", err)
+            return
+        }
+        console.log('File data:', jsonString);
+        var notes = JSON.parse(jsonString);
+ 
+        const newNote = {
+            title: request.body.title,
+            text: request.body.text,
+            id: Math.random().toString(36).substr(2, 9)
+        };
+
+        notes.splice(request.params.id, 1);
+        let NotesJSON = JSON.stringify(notes);
+
+        fs.writeFile(path.join(__dirname, "Develop", "db", "db.json"), NotesJSON, (err) => {
+            if (err) {
+                return console.log(err);
+            }
+            console.log("Success!", NotesJSON);
             return NotesJSON;
         });
 
