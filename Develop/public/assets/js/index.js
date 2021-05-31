@@ -14,6 +14,7 @@ var getNotes = function () {
   });
 };
 
+
 var saveNote = function (note) {
   return $.ajax({
     url: "/api/notes",
@@ -22,12 +23,14 @@ var saveNote = function (note) {
   });
 };
 
+
 var deleteNote = function (id) {
   return $.ajax({
     url: "api/notes/" + id,
     method: "DELETE"
   });
 };
+
 
 var renderActiveNote = function () {
   $saveNoteBtn.hide();
@@ -45,6 +48,7 @@ var renderActiveNote = function () {
   }
 };
 
+
 var handleNoteSave = function () {
   var newNote = {
     title: $noteTitle.val(),
@@ -59,6 +63,7 @@ var handleNoteSave = function () {
 
 
 var handleNoteDelete = function (event) {
+ 
   event.stopPropagation();
 
   var note = $(this)
@@ -87,6 +92,7 @@ var handleNewNoteView = function () {
   renderActiveNote();
 };
 
+
 var handleRenderSaveBtn = function () {
   if (!$noteTitle.val().trim() || !$noteText.val().trim()) {
     $saveNoteBtn.hide();
@@ -94,6 +100,7 @@ var handleRenderSaveBtn = function () {
     $saveNoteBtn.show();
   }
 };
+
 
 var renderNoteList = function (notes) {
   $noteList.empty();
@@ -109,13 +116,14 @@ var renderNoteList = function (notes) {
       "<i class='fas fa-trash-alt float-right text-danger delete-note'>"
     );
 
+
     $li.append($span, $delBtn);
     noteListItems.push($li);
   }
 
   $noteList.append(noteListItems);
 };
-r
+
 var getAndRenderNotes = function () {
   return getNotes().then(function (data) {
     renderNoteList(data);
@@ -128,5 +136,6 @@ $newNoteBtn.on("click", handleNewNoteView);
 $noteList.on("click", ".delete-note", handleNoteDelete);
 $noteTitle.on("keyup", handleRenderSaveBtn);
 $noteText.on("keyup", handleRenderSaveBtn);
+
 
 getAndRenderNotes();
