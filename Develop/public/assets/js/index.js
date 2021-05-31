@@ -31,3 +31,32 @@ var deleteNote = function (id) {
     method: "DELETE"
   });
 };
+
+var renderActiveNote = function () {
+    $saveNoteBtn.hide();
+  
+    if (activeNote.id) {
+      $noteTitle.attr("readonly", true);
+      $noteText.attr("readonly", true);
+      $noteTitle.val(activeNote.title);
+      $noteText.val(activeNote.text);
+    } else {
+      $noteTitle.attr("readonly", false);
+      $noteText.attr("readonly", false);
+      $noteTitle.val("");
+      $noteText.val("");
+    }
+  };
+  
+
+  var handleNoteSave = function () {
+    var newNote = {
+      title: $noteTitle.val(),
+      text: $noteText.val()
+    };
+  
+    saveNote(newNote).then(function (data) {
+      getAndRenderNotes();
+      renderActiveNote();
+    });
+  };
